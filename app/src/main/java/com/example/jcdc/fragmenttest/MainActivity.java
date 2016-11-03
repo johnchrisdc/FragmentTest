@@ -5,10 +5,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
+public class MainActivity extends AppCompatActivity implements Drawer.OnDrawerItemClickListener{
 
     private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
@@ -16,44 +22,58 @@ public class MainActivity extends AppCompatActivity {
     private Fragment fragment_one;
     private Fragment fragment_two;
 
-    private Button btn_switch;
+    private Drawer result;
 
-    private boolean isDa = false;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btn_switch = (Button) findViewById(R.id.btn_switch);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
 
         fragment_one = fragmentManager.findFragmentById(R.id.fragment_one);
         fragment_two = fragmentManager.findFragmentById(R.id.fragment_two);
 
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.show(fragment_one);
-        fragmentTransaction.hide(fragment_two);
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("One");
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(1).withName("Two");
+
+        new DrawerBuilder().withActivity(this).build();
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .addDrawerItems(
+                        item1,
+                        item2
+                )
+                .withOnDrawerItemClickListener(this)
+                .build();
+        result.setSelection(0, true);
+    }
+
+    @Override
+    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+        switch (position) {
+            case 0:
+                fragmentTransaction.show(fragment_one);
+                fragmentTransaction.hide(fragment_two);
+
+                break;
+            case 1:
+                fragmentTransaction.show(fragment_two);
+                fragmentTransaction.hide(fragment_one);
+
+                break;
+        }
         fragmentTransaction.commit();
 
-        btn_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentTransaction = fragmentManager.beginTransaction();
-                if (isDa){
-                    fragmentTransaction.show(fragment_one);
-                    fragmentTransaction.hide(fragment_two);
-
-                    fragmentTransaction.commit();
-                }else {
-                    fragmentTransaction.show(fragment_two);
-                    fragmentTransaction.hide(fragment_one);
-
-                    fragmentTransaction.commit();
-                }
-                isDa = !isDa;
-            }
-        });
+        result.closeDrawer();
+        return true;
     }
 }

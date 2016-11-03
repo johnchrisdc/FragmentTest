@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.jcdc.fragmenttest.MainActivity">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_switch"
-        android:layout_gravity="center"
-        android:text="Switch!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <fragment
-        android:layout_weight="1"
-        android:id="@+id/fragment_one"
-        class="com.example.jcdc.fragmenttest.fragments.FragmentOne"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <fragment
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/fragment_two"
-        class="com.example.jcdc.fragmenttest.fragments.FragmentTwo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:fitsSystemWindows="true">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:gravity="center"
+                app:layout_scrollFlags="scroll|enterAlways"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/content_main" />
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>
